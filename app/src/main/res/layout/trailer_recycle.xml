@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/detail_Deskripsi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/deskripsi"
+            android:layout_marginTop="@dimen/drdv"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageView2"
+            android:layout_marginStart="@dimen/sfbvg" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="@dimen/sec"
+            android:layout_height="@dimen/gdr"
+            app:srcCompat="@drawable/ic_play_circle_filled_black_24dp"
+            android:layout_marginTop="@dimen/drgb"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="@dimen/drgv" />
+    </android.support.constraint.ConstraintLayout>
+</LinearLayout>

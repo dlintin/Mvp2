@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:weightSum="1"
+    android:id="@+id/cardLayout">
+
+    <android.support.v7.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        card_view:cardCornerRadius="@dimen/csrv"
+        android:layout_marginStart="@dimen/drvgd"
+        android:layout_marginEnd="@dimen/gvdrv"
+        android:layout_marginTop="@dimen/vrvds"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:id="@+id/user_layout"
+        android:layout_marginBottom="@dimen/aiwd">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:id="@+id/cardRelative"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/tv_item_number"
+                android:src="@mipmap/ic_launcher"
+                android:adjustViewBounds="true"
+                android:scaleType="center" />
+
+
+
+        </FrameLayout>
+        <TextView
+            android:id="@+id/original_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/cardview"
+            android:textSize="@dimen/srvgy"
+            android:gravity="center_vertical"
+            android:textColor="@color/white"
+            android:background="@drawable/gradient"
+            android:padding="@dimen/bgtfr"
+            android:layout_gravity="bottom" />
+    </android.support.v7.widget.CardView>
+</RelativeLayout>
