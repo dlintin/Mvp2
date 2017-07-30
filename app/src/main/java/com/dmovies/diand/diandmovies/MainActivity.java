@@ -39,6 +39,8 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Objects;
 
 import data.MovieContract;
 import data.MovieDbhelper;
@@ -54,7 +56,9 @@ public class MainActivity extends AppCompatActivity implements Main_Adapter.List
     private String search;
     private String TAG = MainActivity.class.getSimpleName();
     private SQLiteDatabase mDb;
-
+    String SORT_BY = "popular";
+    SharedPref sharedPref;
+    JSONArray jsonItems;
 
     public boolean isOnline() {
         ConnectivityManager cm =
@@ -67,11 +71,55 @@ public class MainActivity extends AppCompatActivity implements Main_Adapter.List
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setTitle("Popular Movie");
+        // User Session Manager
+        sharedPref = new SharedPref(getApplicationContext());
         MovieDbhelper dbhelper = new MovieDbhelper(this);
         mDb = dbhelper.getWritableDatabase();
 
-        refresh_data("popular");
+        // get user data from session
+        HashMap<String, String> user = sharedPref.getUserDetails();
+
+        // get name
+        String name = user.get(SharedPref.KEY_ID);
+
+        Log.d(TAG, "TERSIMPAN : "+ name);
+        if (savedInstanceState!=null)
+        {
+            if(Objects.equals(name, "top_rated")){
+                setTitle("Top Rated Movie");
+                refresh_data_top("top_rated");
+            }
+            if(Objects.equals(name, "popular")){
+                setTitle("Popular Movie");
+                refresh_data_pop("popular");
+            }
+            if(Objects.equals(name, "favorite")){
+
+                if (isOnline()) {
+
+                    jsonItems = getFavorite();
+                    if(jsonItems.length()>0){
+                        mAdapter = new Main_Adapter(this,jsonItems,this);
+                        Log.d(TAG, "MADAPTER : "+ mAdapter);
+                        Log.d(TAG, "JSON ADAPTER : "+ jsonItems);
+                        mNumbersList.setAdapter(mAdapter);
+                        Log.d(TAG, "MNUMBERLIST: "+ mNumbersList);
+                    }
+                } else {
+                    Toast.makeText(this, "Network Is Not Available", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+
+        else {
+            if (isOnline()) {
+                refresh_data("popular");
+            }
+        }
+
+
+
+//        refresh_data("popular");
     }
 
     private JSONArray getFavorite() {
@@ -106,10 +154,15 @@ public class MainActivity extends AppCompatActivity implements Main_Adapter.List
 
     private void refresh_local_data(){
         if (isOnline()) {
-            JSONArray jsonItems = getFavorite();
+
+            jsonItems = getFavorite();
             if(jsonItems.length()>0){
                 mAdapter = new Main_Adapter(this,jsonItems,this);
+
                 mNumbersList.setAdapter(mAdapter);
+                Log.d(TAG, "MADAPTER : "+ mAdapter);
+                Log.d(TAG, "JSON ADAPTER : "+ jsonItems);
+                Log.d(TAG, "MNUMBERLIST: "+ mNumbersList);
             }
         } else {
             Toast.makeText(this, "Network Is Not Available", Toast.LENGTH_SHORT).show();
@@ -118,6 +171,7 @@ public class MainActivity extends AppCompatActivity implements Main_Adapter.List
 
     public void refresh_data(String sort) {
         if (isOnline()) {
+            setTitle("Popular Movie");
             URL getGithubSearchUrl = NetworkUtils.buildUrl(search);
             new GithubQueryTask().execute(getGithubSearchUrl);
             mNumbersList = (RecyclerView) findViewById(R.id.rv_numbers);
@@ -166,16 +220,19 @@ public class MainActivity extends AppCompatActivity implements Main_Adapter.List
         int ItemThatWasClickedId  =item.getItemId();
         if (ItemThatWasClickedId == R.id.action_top_rated) {
             setTitle("Top Rated Movie");
+            sharedPref.createUserLoginSession("top_rated");
             refresh_data_top("top_rated");
         }
         if (ItemThatWasClickedId == R.id.action_popular) {
             setTitle("Popular Movie");
+            sharedPref.createUserLoginSession("popular");
             refresh_data_pop("popular");
         }
         if (ItemThatWasClickedId == R.id.action_favorite) {
-            JSONArray jsonItems = getFavorite();
+             jsonItems = getFavorite();
             if(jsonItems.length()>0){
             setTitle("Favorite");
+                sharedPref.createUserLoginSession("favorite");
                 refresh_local_data();
             }else{
                 Toast.makeText(this, "Favorite Is Empty", Toast.LENGTH_LONG).show();
