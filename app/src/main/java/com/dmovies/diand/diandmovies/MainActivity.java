@@ -113,8 +113,6 @@ public class MainActivity extends AppCompatActivity implements Main_Adapter.List
             }
         }
 
-
-
 //        refresh_data("popular");
     }
 
