@@ -17,6 +17,7 @@ package com.dmovies.diand.diandmovies;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
@@ -58,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements Main_Adapter.List
     private SQLiteDatabase mDb;
     SharedPref sharedPref;
     JSONArray jsonItems;
+    Integer list = 2;
 
     public boolean isOnline() {
         ConnectivityManager cm =
@@ -70,6 +72,14 @@ public class MainActivity extends AppCompatActivity implements Main_Adapter.List
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //detect the orientation to set the number of list
+        if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            list = 4;
+        } else  {
+            list = 2;
+        }
+
         // User Session Manager
         sharedPref = new SharedPref(getApplicationContext());
         MovieDbhelper dbhelper = new MovieDbhelper(this);
@@ -92,19 +102,6 @@ public class MainActivity extends AppCompatActivity implements Main_Adapter.List
                 setTitle("Popular Movie");
                 refresh_data_pop("popular");
             }
-            if(Objects.equals(name, "favorite")){
-
-                jsonItems = getFavorite();
-                if(jsonItems.length()>0){
-                    setTitle("Favorite");
-                    sharedPref.createUserLoginSession("favorite");
-                    refresh_local_data();
-                }else{
-                    Toast.makeText(this, "Favorite Is Empty", Toast.LENGTH_LONG).show();
-                }
-
-
-            }
         }
 
         else {
@@ -115,6 +112,7 @@ public class MainActivity extends AppCompatActivity implements Main_Adapter.List
 
 //        refresh_data("popular");
     }
+
 
     private JSONArray getFavorite() {
         Cursor cursor = mDb.query(MovieContract.MovieEntry.TABLE_NAME,
@@ -146,6 +144,7 @@ public class MainActivity extends AppCompatActivity implements Main_Adapter.List
         return data;
     }
 
+
     private void refresh_local_data(){
         if (isOnline()) {
 
@@ -156,6 +155,7 @@ public class MainActivity extends AppCompatActivity implements Main_Adapter.List
                 Log.d(TAG, "JSON ADAPTER : "+ jsonItems);
                 Log.d(TAG, "MNUMBERLIST: "+ mNumbersList);
                 mNumbersList.setAdapter(mAdapter);
+                Log.d(TAG, "MNUMBERLIST 2: "+ mNumbersList);
 
             }
         } else {
@@ -169,7 +169,7 @@ public class MainActivity extends AppCompatActivity implements Main_Adapter.List
             URL getGithubSearchUrl = NetworkUtils.buildUrl(search);
             new GithubQueryTask().execute(getGithubSearchUrl);
             mNumbersList = (RecyclerView) findViewById(R.id.rv_numbers);
-            GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
+            GridLayoutManager layoutManager = new GridLayoutManager(this, list);
             mNumbersList.setLayoutManager(layoutManager);
             mNumbersList.setHasFixedSize(true);
         } else {
@@ -181,7 +181,7 @@ public class MainActivity extends AppCompatActivity implements Main_Adapter.List
             URL getGithubSearchUrl = NetworkUtils.buildUrlpopular(search);
             new GithubQueryTask().execute(getGithubSearchUrl);
             mNumbersList = (RecyclerView) findViewById(R.id.rv_numbers);
-            GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
+            GridLayoutManager layoutManager = new GridLayoutManager(this, list);
             mNumbersList.setLayoutManager(layoutManager);
             mNumbersList.setHasFixedSize(true);
         } else {
@@ -193,7 +193,7 @@ public class MainActivity extends AppCompatActivity implements Main_Adapter.List
             URL getGithubSearchUrl = NetworkUtils.buildUrltop(search);
             new GithubQueryTask().execute(getGithubSearchUrl);
             mNumbersList = (RecyclerView) findViewById(R.id.rv_numbers);
-            GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
+            GridLayoutManager layoutManager = new GridLayoutManager(this, list);
             mNumbersList.setLayoutManager(layoutManager);
             mNumbersList.setHasFixedSize(true);
         } else {
@@ -226,7 +226,6 @@ public class MainActivity extends AppCompatActivity implements Main_Adapter.List
              jsonItems = getFavorite();
             if(jsonItems.length()>0){
             setTitle("Favorite");
-                sharedPref.createUserLoginSession("favorite");
                 refresh_local_data();
             }else{
                 Toast.makeText(this, "Favorite Is Empty", Toast.LENGTH_LONG).show();
@@ -237,6 +236,7 @@ public class MainActivity extends AppCompatActivity implements Main_Adapter.List
         }
         return super.onOptionsItemSelected(item);
     }
+
 
     @Override
     public void onListItemClick(Movie movie) {
