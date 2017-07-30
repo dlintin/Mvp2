@@ -56,7 +56,6 @@ public class MainActivity extends AppCompatActivity implements Main_Adapter.List
     private String search;
     private String TAG = MainActivity.class.getSimpleName();
     private SQLiteDatabase mDb;
-    String SORT_BY = "popular";
     SharedPref sharedPref;
     JSONArray jsonItems;
 
