@@ -94,19 +94,16 @@ public class MainActivity extends AppCompatActivity implements Main_Adapter.List
             }
             if(Objects.equals(name, "favorite")){
 
-                if (isOnline()) {
-
-                    jsonItems = getFavorite();
-                    if(jsonItems.length()>0){
-                        mAdapter = new Main_Adapter(this,jsonItems,this);
-                        Log.d(TAG, "MADAPTER : "+ mAdapter);
-                        Log.d(TAG, "JSON ADAPTER : "+ jsonItems);
-                        mNumbersList.setAdapter(mAdapter);
-                        Log.d(TAG, "MNUMBERLIST: "+ mNumbersList);
-                    }
-                } else {
-                    Toast.makeText(this, "Network Is Not Available", Toast.LENGTH_SHORT).show();
+                jsonItems = getFavorite();
+                if(jsonItems.length()>0){
+                    setTitle("Favorite");
+                    sharedPref.createUserLoginSession("favorite");
+                    refresh_local_data();
+                }else{
+                    Toast.makeText(this, "Favorite Is Empty", Toast.LENGTH_LONG).show();
                 }
+
+
             }
         }
 
@@ -157,11 +154,11 @@ public class MainActivity extends AppCompatActivity implements Main_Adapter.List
             jsonItems = getFavorite();
             if(jsonItems.length()>0){
                 mAdapter = new Main_Adapter(this,jsonItems,this);
-
-                mNumbersList.setAdapter(mAdapter);
                 Log.d(TAG, "MADAPTER : "+ mAdapter);
                 Log.d(TAG, "JSON ADAPTER : "+ jsonItems);
                 Log.d(TAG, "MNUMBERLIST: "+ mNumbersList);
+                mNumbersList.setAdapter(mAdapter);
+
             }
         } else {
             Toast.makeText(this, "Network Is Not Available", Toast.LENGTH_SHORT).show();
