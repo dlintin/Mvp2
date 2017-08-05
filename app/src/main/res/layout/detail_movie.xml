@@ -14,17 +14,18 @@
                 android:id="@+id/textView8"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/dcs"
+                android:layout_marginStart="@dimen/dew"
                 android:layout_marginTop="@dimen/az"
                 android:text="@string/trailers"
+                android:textSize="18sp"
                 android:textStyle="bold|italic"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/deskripsi"
-                android:layout_marginStart="@dimen/dew"
-                app:layout_constraintRight_toRightOf="parent"
-                android:layout_marginEnd="@dimen/dcs"
+                app:layout_constraintHorizontal_bias="0.025"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintHorizontal_bias="0.025" />
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/deskripsi" />
 
             <TextView
                 android:id="@+id/year"
@@ -216,6 +217,49 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 android:layout_marginTop="@dimen/hawd"
                 app:layout_constraintTop_toBottomOf="@+id/title" />
+
+            <TextView
+                android:id="@+id/textView7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="19dp"
+                android:text="Review"
+                android:textSize="18sp"
+                android:textStyle="bold|italic"
+                app:layout_constraintHorizontal_bias="0.025"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/recyclerviewtrailer" />
+
+            <TextView
+                android:id="@+id/juduul_review"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="5dp"
+                android:text="TextView"
+                android:textStyle="bold"
+                app:layout_constraintHorizontal_bias="0.051"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView7" />
+
+            <TextView
+                android:id="@+id/contente_review"
+                android:layout_width="310dp"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                android:layout_marginTop="-55dp"
+                app:layout_constraintTop_toBottomOf="@+id/juduul_review"
+                android:layout_marginLeft="24dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginRight="8dp"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintHorizontal_bias="0.309" />
+
 
         </android.support.constraint.ConstraintLayout>
 </ScrollView>

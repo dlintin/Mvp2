@@ -26,6 +26,11 @@ import com.bumptech.glide.Glide;
 import com.example.android.popmovies.R;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonParser;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.URL;
@@ -43,7 +48,7 @@ import static data.MovieContract.MovieEntry.ID;
 
 public class Detail_Movie extends AppCompatActivity {
 
-
+    private String data;
     private SQLiteDatabase mDb;
     private RecyclerAdapterTrailer adapter;
     final FragmentActivity c = this;
@@ -51,6 +56,8 @@ public class Detail_Movie extends AppCompatActivity {
     private RecyclerView recyclerView;
     private LinearLayoutManager layoutManager;
     Movie movie;
+    String author,content;
+    TextView judul_reviews, content_reviews;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.detail_movie);
@@ -79,6 +86,8 @@ public class Detail_Movie extends AppCompatActivity {
         TextView duration = (TextView) findViewById(R.id.durasi);
         TextView rating = (TextView) findViewById(R.id.rating);
         TextView deskripsi = (TextView) findViewById(R.id.deskripsi);
+        judul_reviews = (TextView) findViewById(R.id.juduul_review);
+        content_reviews = (TextView) findViewById(R.id.contente_review);
         ImageButton button = (ImageButton) findViewById(R.id.button);
 
 
@@ -90,6 +99,7 @@ public class Detail_Movie extends AppCompatActivity {
         rating.setText(movie.vote_average);
         deskripsi.setText(movie.overview);
         SubRequestData(id);
+        new LoadReview().execute();
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -101,7 +111,6 @@ public class Detail_Movie extends AppCompatActivity {
                 contentValues.put(MovieContract.MovieEntry.OVERVIEW, movie.overview);
                 contentValues.put(MovieContract.MovieEntry.POSTER, movie.poster_image);
                 contentValues.put(MovieContract.MovieEntry.original_language, movie.original_language);
-
                 mDb.insert(MovieContract.MovieEntry.TABLE_NAME, null, contentValues);
                 Toast.makeText(Detail_Movie.this, "Added to Favorite!",
                         Toast.LENGTH_LONG).show();
@@ -164,6 +173,50 @@ public class Detail_Movie extends AppCompatActivity {
             }
         });
         queue.add(stringRequest);
+    }
+
+    public class LoadReview extends AsyncTask<String,String,String>{
+
+        final String TAG = "AsyncTaskParseJson.java";
+        String data = "http://api.themoviedb.org/3/movie/"+id+"/reviews?api_key=230c0ee4f52d5c9fb13d5c01a91b24cd";
+
+
+        @Override
+        protected void onPreExecute() {}
+
+        @Override
+        protected String doInBackground(String... params) {
+            final String TAG = "AsyncTaskParseJson.java";
+            try{
+
+                Log.d(TAG,"DATA JI:" +data);
+
+
+                JSONObject JSONData = new JSONObject(data);
+                JSONArray JSONItems = JSONData.getJSONArray("results");
+
+                Log.d("FileNO1", "rescanned: " + JSONItems);
+                for (int i = 0; i < JSONItems.length(); i++) {
+
+                    JSONObject c = JSONItems.getJSONObject(i);
+                    // Storing each json item in variable
+                    // mengambil tiap data dari array json(fixture)
+                    author = c.getString("author");
+                    content = c.getString("content");
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String GreenAdapter){
+        judul_reviews.setText(author);
+            content_reviews.setText(content);
+        }
+
     }
 
 }
