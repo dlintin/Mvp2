@@ -40,13 +40,17 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
 
-import data.MovieContract;
-import data.MovieDbhelper;
-import model.Movie;
-import utilities.NetworkUtils;
+import com.dmovies.diand.diandmovies.data.MovieContract;
+import com.dmovies.diand.diandmovies.data.MovieDbhelper;
+import com.dmovies.diand.diandmovies.model.Movie;
+import com.dmovies.diand.diandmovies.utilities.NetworkUtils;
+
+import static java.security.AccessController.getContext;
 
 public class MainActivity extends AppCompatActivity implements Main_Adapter.ListItemClickListener{
 
@@ -55,11 +59,20 @@ public class MainActivity extends AppCompatActivity implements Main_Adapter.List
     private RecyclerView mNumbersList;
     private String data;
     private String search;
+    /*An int to hold status: which set of movies are currently being viewed */
+    private int currentMovieSet;
+    private boolean mUsingOfflineData;
     private String TAG = MainActivity.class.getSimpleName();
     private SQLiteDatabase mDb;
     SharedPref sharedPref;
     JSONArray jsonItems;
     Integer list = 2;
+    private List<Movie> mMovieList;
+
+
+    private static final int POPULAR_SET = 100;
+    private static final int TOP_RATED_SET = 101;
+    private static final int OFFLINE_SET = 102;
 
     public boolean isOnline() {
         ConnectivityManager cm =
@@ -85,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements Main_Adapter.List
         MovieDbhelper dbhelper = new MovieDbhelper(this);
         mDb = dbhelper.getWritableDatabase();
 
-        // get user data from session
+        // get user com.dmovies.diand.diandmovies.data from session
         HashMap<String, String> user = sharedPref.getUserDetails();
 
         // get name
@@ -151,17 +164,16 @@ public class MainActivity extends AppCompatActivity implements Main_Adapter.List
             jsonItems = getFavorite();
             if(jsonItems.length()>0){
                 mAdapter = new Main_Adapter(this,jsonItems,this);
-                Log.d(TAG, "MADAPTER : "+ mAdapter);
-                Log.d(TAG, "JSON ADAPTER : "+ jsonItems);
-                Log.d(TAG, "MNUMBERLIST: "+ mNumbersList);
+
                 mNumbersList.setAdapter(mAdapter);
-                Log.d(TAG, "MNUMBERLIST 2: "+ mNumbersList);
+//                Log.d(TAG, "MNUMBERLIST 2: "+ mNumbersList);
 
             }
         } else {
             Toast.makeText(this, "Network Is Not Available", Toast.LENGTH_SHORT).show();
         }
     }
+
 
     public void refresh_data(String sort) {
         if (isOnline()) {

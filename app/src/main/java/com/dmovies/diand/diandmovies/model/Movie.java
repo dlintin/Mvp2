@@ -1,4 +1,4 @@
-package model;
+package com.dmovies.diand.diandmovies.model;
 
 import java.io.Serializable;
 

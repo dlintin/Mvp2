@@ -29,7 +29,7 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import model.Movie;
+import com.dmovies.diand.diandmovies.model.Movie;
 
 
 public class Main_Adapter extends RecyclerView.Adapter<Main_Adapter.NumberViewHolder> {

@@ -1,10 +1,10 @@
-package data;
+package com.dmovies.diand.diandmovies.data;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import static data.MovieContract.MovieEntry;
+import static com.dmovies.diand.diandmovies.data.MovieContract.MovieEntry;
 
 /**
  * Created by USER on 28/05/2017.
@@ -14,6 +14,7 @@ public class MovieDbhelper extends SQLiteOpenHelper{
 
 public static final String DATABASE_NAME = "movies.db";
 private static final int DATABASE_VERSION = 2;
+
 public MovieDbhelper(Context context){super(context, DATABASE_NAME, null, DATABASE_VERSION);}
 
 

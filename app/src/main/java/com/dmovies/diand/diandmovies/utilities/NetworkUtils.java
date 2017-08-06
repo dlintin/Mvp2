@@ -1,4 +1,4 @@
-package utilities;
+package com.dmovies.diand.diandmovies.utilities;
 
 import android.net.Uri;
 

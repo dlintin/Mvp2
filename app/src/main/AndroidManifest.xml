@@ -22,6 +22,11 @@
         </activity>
         <activity android:name="com.dmovies.diand.diandmovies.Detail_Movie">
         </activity>
+
+        <provider
+            android:name="com.dmovies.diand.diandmovies.data.MovieContentProvider"
+            android:authorities="com.dmovies.diand.diandmovies"
+            android:exported="false"/>
     </application>
 
 </manifest>

@@ -1,8 +1,10 @@
 package com.dmovies.diand.diandmovies;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -26,21 +28,22 @@ import com.bumptech.glide.Glide;
 import com.example.android.popmovies.R;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonParser;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 
-import data.MovieContract;
-import data.MovieDbhelper;
-import model.Movie;
-import utilities.NetworkUtils;
+import com.dmovies.diand.diandmovies.data.MovieContract;
+import com.dmovies.diand.diandmovies.data.MovieDbhelper;
+import com.dmovies.diand.diandmovies.model.Movie;
+import com.dmovies.diand.diandmovies.utilities.NetworkUtils;
 
-import static data.MovieContract.MovieEntry.ID;
+import static com.dmovies.diand.diandmovies.data.MovieContract.MovieEntry.ID;
 
 /**
  * Created by USER on 27/05/2017.
@@ -51,10 +54,11 @@ public class Detail_Movie extends AppCompatActivity {
     private String data;
     private SQLiteDatabase mDb;
     private RecyclerAdapterTrailer adapter;
+    private RecycleAdapterReview adapterreview;
     final FragmentActivity c = this;
     private String id;
-    private RecyclerView recyclerView;
-    private LinearLayoutManager layoutManager;
+    private RecyclerView recyclerView,recyclerViewReview;
+    private LinearLayoutManager layoutManager,xlayoutmanager;
     Movie movie;
     String author,content;
     TextView judul_reviews, content_reviews;
@@ -64,6 +68,9 @@ public class Detail_Movie extends AppCompatActivity {
 
         MovieDbhelper dbhelper = new MovieDbhelper(this);
         mDb = dbhelper.getWritableDatabase();
+
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerviewtrailer);
+        recyclerViewReview = (RecyclerView) findViewById(R.id.eviewxxxX);
 
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
@@ -77,17 +84,20 @@ public class Detail_Movie extends AppCompatActivity {
         Log.d("id", "" + intent.getLongExtra("id", 0));
         id = Long.toString(movie.id);
         Log.d("id", "" + id);
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerviewtrailer);
+
         layoutManager = new LinearLayoutManager(c);
+        xlayoutmanager = new LinearLayoutManager(c);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
+        recyclerViewReview.setHasFixedSize(true);
+        recyclerViewReview.setLayoutManager(xlayoutmanager);
+        recyclerView.setNestedScrollingEnabled(false);
+        recyclerViewReview.setNestedScrollingEnabled(false);
         TextView title = (TextView) findViewById(R.id.title);
         TextView year = (TextView) findViewById(R.id.year);
         TextView duration = (TextView) findViewById(R.id.durasi);
         TextView rating = (TextView) findViewById(R.id.rating);
         TextView deskripsi = (TextView) findViewById(R.id.deskripsi);
-        judul_reviews = (TextView) findViewById(R.id.juduul_review);
-        content_reviews = (TextView) findViewById(R.id.contente_review);
         ImageButton button = (ImageButton) findViewById(R.id.button);
 
 
@@ -99,19 +109,12 @@ public class Detail_Movie extends AppCompatActivity {
         rating.setText(movie.vote_average);
         deskripsi.setText(movie.overview);
         SubRequestData(id);
-        new LoadReview().execute();
+        loadreview(id);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ContentValues contentValues = new ContentValues();
-                contentValues.put(ID, movie.id);
-                contentValues.put(MovieContract.MovieEntry.ORIGINAL_TITLE, movie.original_title);
-                contentValues.put(MovieContract.MovieEntry.RELEASE, movie.release_date);
-                contentValues.put(MovieContract.MovieEntry.VOTE, movie.vote_average);
-                contentValues.put(MovieContract.MovieEntry.OVERVIEW, movie.overview);
-                contentValues.put(MovieContract.MovieEntry.POSTER, movie.poster_image);
-                contentValues.put(MovieContract.MovieEntry.original_language, movie.original_language);
-                mDb.insert(MovieContract.MovieEntry.TABLE_NAME, null, contentValues);
+                
+                addMovie();
                 Toast.makeText(Detail_Movie.this, "Added to Favorite!",
                         Toast.LENGTH_LONG).show();
             }
@@ -175,48 +178,73 @@ public class Detail_Movie extends AppCompatActivity {
         queue.add(stringRequest);
     }
 
-    public class LoadReview extends AsyncTask<String,String,String>{
-
-        final String TAG = "AsyncTaskParseJson.java";
-        String data = "http://api.themoviedb.org/3/movie/"+id+"/reviews?api_key=230c0ee4f52d5c9fb13d5c01a91b24cd";
-
-
-        @Override
-        protected void onPreExecute() {}
-
-        @Override
-        protected String doInBackground(String... params) {
-            final String TAG = "AsyncTaskParseJson.java";
-            try{
-
-                Log.d(TAG,"DATA JI:" +data);
-
-
-                JSONObject JSONData = new JSONObject(data);
-                JSONArray JSONItems = JSONData.getJSONArray("results");
-
-                Log.d("FileNO1", "rescanned: " + JSONItems);
-                for (int i = 0; i < JSONItems.length(); i++) {
-
-                    JSONObject c = JSONItems.getJSONObject(i);
-                    // Storing each json item in variable
-                    // mengambil tiap data dari array json(fixture)
-                    author = c.getString("author");
-                    content = c.getString("content");
-                }
-
-            } catch (JSONException e) {
-                e.printStackTrace();
+    private void loadreview(String i){
+        RequestQueue review = Volley.newRequestQueue(this.getApplicationContext());
+        String urlx = "";
+        urlx = "http://api.themoviedb.org/3/movie/"+ i +"/reviews?api_key=230c0ee4f52d5c9fb13d5c01a91b24cd";
+        Log.d("URL FINAL", "" + urlx);
+        StringRequest ReviewRequest = new StringRequest(Request.Method.GET, urlx, new Response.Listener<String>() {;
+            @Override
+            public void onResponse(String response) {
+                Log.d("TRAILER", "Response " + response);
+                GsonBuilder builder = new GsonBuilder();
+                Gson mGson = builder.create();
+                ObjectReview a = mGson.fromJson(response, ObjectReview.class);
+                adapterreview = new RecycleAdapterReview(c, a.results);
+                recyclerViewReview.setAdapter(adapterreview);
             }
-            return null;
-        }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("TRAILER", "Error " + error.getMessage());
+            }
+        });
+        review.add(ReviewRequest);
+    }
 
-        @Override
-        protected void onPostExecute(String GreenAdapter){
-        judul_reviews.setText(author);
-            content_reviews.setText(content);
-        }
 
+    /**
+     * Remove Movie from favorites db and delete image from file directory
+     */
+    private void removeMovie() {
+        String currentMovieId = String.valueOf(movie.id);
+        String whereClause = MovieContract.MovieEntry.ID + " = ?";
+        String[] whereArgs = new String[]{currentMovieId};
+        int rowsDeleted = this.getContentResolver().delete(MovieContract.MovieEntry.CONTENT_URI, whereClause, whereArgs);
+
+        File photofile = new File(this.getFilesDir(), currentMovieId);
+        if (photofile.exists()) {
+            photofile.delete();
+        }
+    }
+
+
+
+    /**
+     * Add Movie to favorite db and write image to file
+     */
+    private void addMovie() {
+        /* Add Movie to ContentProvider */
+        ContentValues values = new ContentValues();
+        values.put(MovieContract.MovieEntry.ID, movie.id);
+        values.put(MovieContract.MovieEntry.ORIGINAL_TITLE, movie.original_title);
+        values.put(MovieContract.MovieEntry.RELEASE, movie.release_date);
+        values.put(MovieContract.MovieEntry.VOTE, movie.vote_average);
+        values.put(MovieContract.MovieEntry.OVERVIEW, movie.overview);
+        values.put(MovieContract.MovieEntry.POSTER, movie.poster_image);
+        values.put(MovieContract.MovieEntry.original_language, movie.original_language);
+        Uri insertedMovieUri = this.getContentResolver().
+                insert(MovieContract.MovieEntry.CONTENT_URI, values);
+
+        /* Write the file to disk */
+        String filename = String.valueOf(id);
+        FileOutputStream outputStream;
+        try {
+            outputStream = this.openFileOutput(filename, Context.MODE_PRIVATE);
+            outputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

@@ -30,7 +30,7 @@
             <TextView
                 android:id="@+id/year"
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/cergf"
+                android:layout_height="0dp"
                 android:layout_marginTop="@dimen/acrg"
                 android:text="@string/year"
                 android:textAllCaps="true"
@@ -48,7 +48,7 @@
             <TextView
                 android:id="@+id/title"
                 android:layout_width="fill_parent"
-                android:layout_height="@dimen/crbg"
+                android:layout_height="50dp"
                 android:padding="@dimen/ceaxd"
                 android:textSize="@dimen/daca"
                 android:background="@color/text"
@@ -56,12 +56,11 @@
                 android:text="@string/textview"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:layout_editor_absoluteX="0dp"
-                android:layout_marginTop="0dp" />
+                tools:layout_editor_absoluteX="0dp" />
             <ImageView
                 android:id="@+id/poster"
-                android:layout_width="@dimen/dcfwe"
-                android:layout_height="@dimen/dawdcv"
+                android:layout_width="173dp"
+                android:layout_height="213dp"
                 app:srcCompat="@mipmap/ic_launcher"
                 app:layout_constraintTop_toBottomOf="@+id/title"
                 app:layout_constraintStart_toStartOf="parent"
@@ -107,7 +106,7 @@
 
             <TextView
                 android:id="@+id/deskripsi"
-                android:layout_width="@dimen/erscf"
+                android:layout_width="322dp"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
                 android:padding="@dimen/gdrg"
@@ -196,7 +195,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
-                app:srcCompat="@android:drawable/btn_star_big_on"
+                app:srcCompat="@drawable/ic_star_border_black_24dp"
                 android:layout_marginTop="@dimen/srgdr"
                 app:layout_constraintTop_toBottomOf="@+id/title"
                 app:layout_constraintLeft_toRightOf="@+id/poster"
@@ -225,41 +224,31 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginTop="19dp"
-                android:text="Review"
+                android:text="@string/review"
                 android:textSize="18sp"
                 android:textStyle="bold|italic"
                 app:layout_constraintHorizontal_bias="0.025"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/recyclerviewtrailer" />
+                app:layout_constraintTop_toBottomOf="@+id/recyclerviewtrailer"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp" />
 
-            <TextView
-                android:id="@+id/juduul_review"
-                android:layout_width="wrap_content"
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/eviewxxxX"
+                android:layout_width="320dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/gdrvf"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginEnd="@dimen/seui"
+                android:layout_marginTop="18dp"
+                app:layout_constraintTop_toBottomOf="@+id/textView7"
                 android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginTop="5dp"
-                android:text="TextView"
-                android:textStyle="bold"
-                app:layout_constraintHorizontal_bias="0.051"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView7" />
-
-            <TextView
-                android:id="@+id/contente_review"
-                android:layout_width="310dp"
-                android:layout_height="wrap_content"
-                android:text="TextView"
-                android:layout_marginTop="-55dp"
-                app:layout_constraintTop_toBottomOf="@+id/juduul_review"
-                android:layout_marginLeft="24dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 android:layout_marginRight="8dp"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintHorizontal_bias="0.309" />
-
+                app:layout_constraintHorizontal_bias="0.024">
+            </android.support.v7.widget.RecyclerView>
 
         </android.support.constraint.ConstraintLayout>
 </ScrollView>

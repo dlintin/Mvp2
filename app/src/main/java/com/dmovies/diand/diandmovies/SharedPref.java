@@ -54,7 +54,7 @@ public class SharedPref {
 	
 	
 	/**
-	 * Get stored session data
+	 * Get stored session com.dmovies.diand.diandmovies.data
 	 * */
 	public HashMap<String, String> getUserDetails(){
 		
@@ -73,7 +73,7 @@ public class SharedPref {
 	 * */
 	public void logoutUser(){
 		
-		// Clearing all user data from Shared Preferences
+		// Clearing all user com.dmovies.diand.diandmovies.data from Shared Preferences
 		editor.clear();
 		editor.commit();
 
