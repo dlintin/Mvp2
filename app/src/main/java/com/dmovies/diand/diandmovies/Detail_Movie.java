@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.content.CursorLoader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,7 +18,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -31,11 +29,6 @@ import com.example.android.popmovies.R;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
@@ -44,9 +37,6 @@ import com.dmovies.diand.diandmovies.data.MovieContract;
 import com.dmovies.diand.diandmovies.data.MovieDbhelper;
 import com.dmovies.diand.diandmovies.model.Movie;
 import com.dmovies.diand.diandmovies.utilities.NetworkUtils;
-
-import static com.dmovies.diand.diandmovies.data.MovieContract.MovieEntry.CONTENT_URI;
-import static com.dmovies.diand.diandmovies.data.MovieContract.MovieEntry.ID;
 
 /**
  * Created by USER on 27/05/2017.
@@ -63,8 +53,7 @@ public class Detail_Movie extends AppCompatActivity {
     private RecyclerView recyclerView,recyclerViewReview;
     private LinearLayoutManager layoutManager,xlayoutmanager;
     Movie movie;
-    String author,content;
-    TextView judul_reviews, content_reviews;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.detail_movie);
@@ -239,11 +228,6 @@ public class Detail_Movie extends AppCompatActivity {
         String[] whereArgs = new String[]{currentMovieId};
         this.getContentResolver().delete(MovieContract.MovieEntry.CONTENT_URI, whereClause, whereArgs);
 
-
-        File photofile = new File(this.getFilesDir(), currentMovieId);
-        if (photofile.exists()) {
-            photofile.delete();
-        }
     }
 
 
