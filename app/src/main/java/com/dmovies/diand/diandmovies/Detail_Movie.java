@@ -3,11 +3,13 @@ package com.dmovies.diand.diandmovies;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.CursorLoader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -43,6 +45,7 @@ import com.dmovies.diand.diandmovies.data.MovieDbhelper;
 import com.dmovies.diand.diandmovies.model.Movie;
 import com.dmovies.diand.diandmovies.utilities.NetworkUtils;
 
+import static com.dmovies.diand.diandmovies.data.MovieContract.MovieEntry.CONTENT_URI;
 import static com.dmovies.diand.diandmovies.data.MovieContract.MovieEntry.ID;
 
 /**
@@ -113,10 +116,9 @@ public class Detail_Movie extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                
-                addMovie();
-                Toast.makeText(Detail_Movie.this, "Added to Favorite!",
-                        Toast.LENGTH_LONG).show();
+
+                adordelete();
+
             }
         });
 
@@ -202,6 +204,31 @@ public class Detail_Movie extends AppCompatActivity {
         review.add(ReviewRequest);
     }
 
+    private void adordelete(){
+        String currentMovieId = String.valueOf(movie.id);
+        String whereClause = MovieContract.MovieEntry.ID + " = ?";
+        String[] whereArgs = new String[]{currentMovieId};
+        Cursor c = this.getContentResolver().query(MovieContract.MovieEntry.CONTENT_URI, null, whereClause, whereArgs, null);
+
+        Log.d("CURSOR", "Response " + c);
+        if (c.getCount() == 0) {
+
+            // row does not exist, you can insert or do sth else
+            addMovie();
+            Toast.makeText(Detail_Movie.this, "Added to Favorite!",
+                    Toast.LENGTH_LONG).show();
+
+
+        } else {
+            // already inserted, update this row or do sth else
+            removeMovie();
+            Toast.makeText(Detail_Movie.this, "Favorite Deleted! Refresh Favorite",
+                    Toast.LENGTH_LONG).show();
+
+        }
+        assert c != null;
+        c.close();
+    }
 
     /**
      * Remove Movie from favorites db and delete image from file directory
@@ -210,7 +237,8 @@ public class Detail_Movie extends AppCompatActivity {
         String currentMovieId = String.valueOf(movie.id);
         String whereClause = MovieContract.MovieEntry.ID + " = ?";
         String[] whereArgs = new String[]{currentMovieId};
-        int rowsDeleted = this.getContentResolver().delete(MovieContract.MovieEntry.CONTENT_URI, whereClause, whereArgs);
+        this.getContentResolver().delete(MovieContract.MovieEntry.CONTENT_URI, whereClause, whereArgs);
+
 
         File photofile = new File(this.getFilesDir(), currentMovieId);
         if (photofile.exists()) {
